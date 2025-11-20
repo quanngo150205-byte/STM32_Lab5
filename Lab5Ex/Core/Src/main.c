@@ -19,7 +19,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stdio.h"
+#include "uart_communication_fsm.h"
+#include "command_parser_fsm.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -60,11 +61,18 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t temp = 0;
+
+uint8_t temp;
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
     if(huart->Instance == USART2){
-        HAL_UART_Transmit(&huart2, &temp, 1, 50);
+        buffer[index_buffer++] = temp;
+        if(index_buffer == 30) index_buffer = 0;
+
+
+
+        buffer_flag = 1;
+
         HAL_UART_Receive_IT(&huart2, &temp, 1);
     }
 }
@@ -103,14 +111,19 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_UART_Receive_IT(&huart2, &temp, 1);
   /* USER CODE END 2 */
-
+  command_parser_init();
+  uart_communication_init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-	    HAL_GPIO_TogglePin(GPIOA, LED_BLINK_Pin);
-	    HAL_Delay(1000);
+	    if(buffer_flag) {
+	        command_parser_run();
+	        buffer_flag = 0;
+	    }
+
+	    uart_communication_run();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
