@@ -67,7 +67,7 @@ uint8_t temp;
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
     if(huart->Instance == USART2){
         buffer[index_buffer++] = temp;
-        if(index_buffer == 30) index_buffer = 0;
+        if(index_buffer >= MAX_BUFFER_SIZE) index_buffer = 0;
 
 
 
@@ -109,6 +109,7 @@ int main(void)
   MX_ADC1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+
   HAL_UART_Receive_IT(&huart2, &temp, 1);
   /* USER CODE END 2 */
   command_parser_init();
@@ -117,6 +118,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  HAL_GPIO_TogglePin(GPIOA, LED_BLINK_Pin);
+	  HAL_Delay(500);
     /* USER CODE END WHILE */
 	    if(buffer_flag) {
 	        command_parser_run();

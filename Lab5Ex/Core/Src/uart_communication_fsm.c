@@ -4,7 +4,6 @@
  *  Created on: Nov 21, 2025
  *      Author: ngoqu
  */
-
 #include "uart_communication_fsm.h"
 #include <stdio.h>
 #include <string.h>
@@ -37,7 +36,7 @@ void uart_communication_run() {
             command_flag = 0;
 
             ADC_value = HAL_ADC_GetValue(&hadc1);
-            sprintf(tx_buffer, "!ADC=%lu#", ADC_value);
+            sprintf(tx_buffer, "!ADC=%lu#\r\n", ADC_value);
 
             HAL_UART_Transmit(&huart2,
                               (uint8_t*)tx_buffer,
@@ -65,4 +64,3 @@ void uart_communication_run() {
         break;
     }
 }
-
