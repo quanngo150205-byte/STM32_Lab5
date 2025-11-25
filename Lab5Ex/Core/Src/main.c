@@ -112,8 +112,8 @@ int main(void)
 
   HAL_UART_Receive_IT(&huart2, &temp, 1);
   /* USER CODE END 2 */
-  command_parser_init();
   uart_communication_init();
+  command_parser_init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -121,12 +121,10 @@ int main(void)
 	  HAL_GPIO_TogglePin(GPIOA, LED_BLINK_Pin);
 	  HAL_Delay(500);
     /* USER CODE END WHILE */
-	    if(buffer_flag) {
-	        command_parser_run();
-	        buffer_flag = 0;
-	    }
-
-	    uart_communication_run();
+	  if (buffer_flag == 1){
+		  command_parser_run();
+	  }
+	  uart_communication_run();
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
