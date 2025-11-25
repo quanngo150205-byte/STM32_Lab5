@@ -19,8 +19,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "uart_communication_fsm.h"
 #include "command_parser_fsm.h"
+#include "uart_communication_fsm.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -69,8 +69,6 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
         buffer[index_buffer++] = temp;
         if(index_buffer >= MAX_BUFFER_SIZE) index_buffer = 0;
 
-
-
         buffer_flag = 1;
 
         HAL_UART_Receive_IT(&huart2, &temp, 1);
@@ -112,8 +110,8 @@ int main(void)
 
   HAL_UART_Receive_IT(&huart2, &temp, 1);
   /* USER CODE END 2 */
-  uart_communication_init();
   command_parser_init();
+  uart_communication_init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -121,8 +119,9 @@ int main(void)
 	  HAL_GPIO_TogglePin(GPIOA, LED_BLINK_Pin);
 	  HAL_Delay(500);
     /* USER CODE END WHILE */
-	  if (buffer_flag == 1){
+	  if (buffer_flag){
 		  command_parser_run();
+		  buffer_flag = 0;
 	  }
 	  uart_communication_run();
     /* USER CODE BEGIN 3 */
