@@ -1,12 +1,12 @@
 /*
- * uart_communication_fsm.h
+ * uart_communication.h
  *
- *  Created on: Nov 21, 2025
+ *  Created on: Nov 26, 2025
  *      Author: ngoqu
  */
 
-#ifndef __UART_COMMUNICATION_FSM_H__
-#define __UART_COMMUNICATION_FSM_H__
+#ifndef INC_UART_COMMUNICATION_FSM_H_
+#define INC_UART_COMMUNICATION_FSM_H_
 
 #include "stm32f1xx_hal.h"
 #include "command_parser_fsm.h"
@@ -17,5 +17,4 @@ extern UART_HandleTypeDef huart2;
 void uart_communication_init();
 void uart_communication_run();
 
-#endif
-
+#endif /* INC_UART_COMMUNICATION_FSM_H_ */

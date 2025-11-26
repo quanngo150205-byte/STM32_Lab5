@@ -1,9 +1,10 @@
 /*
- * uart_communication_fsm.c
+ * uart_communication.c
  *
- *  Created on: Nov 21, 2025
+ *  Created on: Nov 26, 2025
  *      Author: ngoqu
  */
+
 #include "uart_communication_fsm.h"
 #include <stdio.h>
 #include <string.h>

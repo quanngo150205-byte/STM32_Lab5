@@ -1,5 +1,12 @@
-#ifndef __COMMAND_PARSER_FSM_H__
-#define __COMMAND_PARSER_FSM_H__
+/*
+ * command_parser.h
+ *
+ *  Created on: Nov 26, 2025
+ *      Author: ngoqu
+ */
+
+#ifndef INC_COMMAND_PARSER_FSM_H_
+#define INC_COMMAND_PARSER_FSM_H_
 
 #include <stdint.h>
 
@@ -15,4 +22,4 @@ extern uint8_t command_flag;
 void command_parser_init();
 void command_parser_run();
 
-#endif
+#endif /* INC_COMMAND_PARSER_FSM_H_ */

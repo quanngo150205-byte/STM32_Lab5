@@ -1,3 +1,10 @@
+/*
+ * command_parser.c
+ *
+ *  Created on: Nov 26, 2025
+ *      Author: ngoqu
+ */
+
 #include "command_parser_fsm.h"
 #include <string.h>
 
