@@ -72,7 +72,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
         if(index_buffer >= MAX_BUFFER_SIZE) index_buffer = 0;
 
         buffer_flag = 1;
-
+        HAL_UART_Transmit(&huart2, &temp, 1, 50);
         HAL_UART_Receive_IT(&huart2, &temp, 1);
     }
 }
@@ -113,7 +113,8 @@ int main(void)
   HAL_UART_Receive_IT(&huart2, &temp, 1);
   HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
-
+  command_parser_init();
+  uart_communication_init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
