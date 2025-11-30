@@ -42,9 +42,10 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
 
 TIM_HandleTypeDef htim2;
-ADC_HandleTypeDef hadc1;
+
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -67,9 +68,10 @@ static void MX_USART2_UART_Init(void);
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
     if(huart->Instance == USART2){
+    	uart_rx_buffer[uart_rx_index++] = uart_rx_temp;
+    	if (uart_rx_index >= UART_BUFFER_SIZE) uart_rx_index = 0;
 
         uart_rx_flag = 1;
-        HAL_UART_Transmit(&huart2 , &uart_rx_temp, 1 , 50);
         HAL_UART_Receive_IT(&huart2, &uart_rx_temp, 1);
     }
 }
@@ -107,12 +109,13 @@ int main(void)
   MX_TIM2_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  CommandParser_Init();
+  UART_Comm_Init();
 
   HAL_UART_Receive_IT(&huart2, &uart_rx_temp, 1);
   HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
-  CommandParser_Init();
-  UART_Comm_Init();
+  HAL_UART_Transmit(&huart2, (uint8_t*)"Hello\r\n", 7, 100);
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -121,7 +124,8 @@ int main(void)
 	  HAL_Delay(250);
 	  if (uart_rx_flag){
 		  uart_rx_flag = 0;
-		  CommandParser_Run(uart_rx_temp);
+		  uint8_t byt = uart_rx_temp;
+		  CommandParser_Run(byt);
 	  }
 	  UART_Comm_Run(HAL_GetTick());
     /* USER CODE END WHILE */

@@ -1,4 +1,4 @@
 command_parser.c:17:6:CommandParser_Init	4	static
 command_parser.c:23:6:cp_reset_buffer	8	static
 command_parser.c:29:6:cp_handle_command	16	static
-command_parser.c:43:6:CommandParser_Run	16	static
+command_parser.c:43:6:CommandParser_Run	24	static
