@@ -28,6 +28,8 @@ void UART_Send(const char *msg){
 }
 
 void get_adc_value(){
+    HAL_ADC_Start(&hadc1);
+    HAL_ADC_PollForConversion(&hadc1, 10);
 	adc_value = HAL_ADC_GetValue(&hadc1);
 }
 
@@ -35,13 +37,13 @@ void UART_Comm_Run(uint32_t tick){
     switch(uart_state){
         case UART_IDLE:
             if(cmd_rst_flag){
+                auto_send_enabled = 1;
+                last_send_tick = tick;
+                cmd_rst_flag = 0;
             	get_adc_value();
                 char msg[32];
                 sprintf(msg,"!ADC=%04d#",adc_value);
                 UART_Send(msg);
-                auto_send_enabled = 1;
-                last_send_tick = tick;
-                cmd_rst_flag = 0;
                 uart_state = UART_RESEND_WAIT;
             }
             break;

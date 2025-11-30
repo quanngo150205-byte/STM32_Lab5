@@ -1,4 +1,4 @@
 uart_communication.c:20:6:UART_Comm_Init	4	static
 uart_communication.c:26:6:UART_Send	16	static
 uart_communication.c:30:6:get_adc_value	8	static
-uart_communication.c:34:6:UART_Comm_Run	48	static
+uart_communication.c:36:6:UART_Comm_Run	48	static

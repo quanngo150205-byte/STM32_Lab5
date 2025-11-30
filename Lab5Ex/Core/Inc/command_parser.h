@@ -12,7 +12,7 @@
 #include <string.h>
 
 void CommandParser_Init(void);
-void CommandParser_Run(uint8_t);  // State machine xử lý byte
+void CommandParser_Run(char);  // State machine xử lý byte
 
 
 #endif /* INC_COMMAND_PARSER_H_ */
