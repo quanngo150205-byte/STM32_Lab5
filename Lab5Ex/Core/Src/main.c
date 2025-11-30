@@ -19,8 +19,8 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "command_parser_fsm.h"
-#include "uart_communication_fsm.h"
+#include "command_parser.h"
+#include "uart_communication.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -42,10 +42,9 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
 
 TIM_HandleTypeDef htim2;
-
+ADC_HandleTypeDef hadc1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
@@ -64,16 +63,14 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t temp;
+
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
     if(huart->Instance == USART2){
-        buffer[index_buffer++] = temp;
-        if(index_buffer >= MAX_BUFFER_SIZE) index_buffer = 0;
 
-        buffer_flag = 1;
-        HAL_UART_Transmit(&huart2, &temp, 1, 50);
-        HAL_UART_Receive_IT(&huart2, &temp, 1);
+        uart_rx_flag = 1;
+        HAL_UART_Transmit(&huart2 , &uart_rx_temp, 1 , 50);
+        HAL_UART_Receive_IT(&huart2, &uart_rx_temp, 1);
     }
 }
 /* USER CODE END 0 */
@@ -110,21 +107,23 @@ int main(void)
   MX_TIM2_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Receive_IT(&huart2, &temp, 1);
+
+  HAL_UART_Receive_IT(&huart2, &uart_rx_temp, 1);
   HAL_TIM_Base_Start_IT(&htim2);
   /* USER CODE END 2 */
-  command_parser_init();
-  uart_communication_init();
+  CommandParser_Init();
+  UART_Comm_Init();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if (buffer_flag){
-		  HAL_GPIO_TogglePin(GPIOA, BLINK_LED_Pin);
-		  command_parser_run();
-		  buffer_flag = 0;
+	  HAL_GPIO_TogglePin(GPIOA, BLINK_LED_Pin);
+	  HAL_Delay(250);
+	  if (uart_rx_flag){
+		  uart_rx_flag = 0;
+		  CommandParser_Run(uart_rx_temp);
 	  }
-	  uart_communication_run();
+	  UART_Comm_Run(HAL_GetTick());
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
