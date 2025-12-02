@@ -15,7 +15,7 @@ extern UART_HandleTypeDef huart2;
 UARTState uart_state = UART_IDLE;
 int auto_send_enabled = 0;
 uint32_t last_send_tick = 0;
-uint16_t adc_value;
+uint32_t adc_value;
 
 void UART_Comm_Init(void){
     uart_state = UART_IDLE;
@@ -28,9 +28,11 @@ void UART_Send(const char *msg){
 }
 
 void get_adc_value(){
-    HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, 10);
-	adc_value = HAL_ADC_GetValue(&hadc1);
+	HAL_ADC_Start(&hadc1);
+	    if (HAL_ADC_PollForConversion(&hadc1, 100) == HAL_OK) {
+	        adc_value = HAL_ADC_GetValue(&hadc1);
+	    }
+	    HAL_ADC_Stop(&hadc1);
 }
 
 void UART_Comm_Run(uint32_t tick){
@@ -42,7 +44,7 @@ void UART_Comm_Run(uint32_t tick){
                 cmd_rst_flag = 0;
             	get_adc_value();
                 char msg[32];
-                sprintf(msg,"!ADC=%04d#",adc_value);
+                sprintf(msg,"!ADC=%lu#",adc_value);
                 UART_Send(msg);
                 uart_state = UART_RESEND_WAIT;
             }
@@ -51,7 +53,7 @@ void UART_Comm_Run(uint32_t tick){
             if(auto_send_enabled && tick - last_send_tick >= 3000){
             	get_adc_value();
                 char msg[32];
-                sprintf(msg,"!ADC=%04d#",adc_value);
+                sprintf(msg,"!ADC=%lu#",adc_value);
                 UART_Send(msg);
                 last_send_tick = tick;
             }

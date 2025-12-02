@@ -38,6 +38,6 @@ extern uint32_t last_send_tick;
 
 
 // ADC value
-extern uint16_t adc_value;
+extern uint32_t adc_value;
 
 #endif /* INC_GLOBAL_H_ */

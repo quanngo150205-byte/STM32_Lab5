@@ -110,8 +110,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   CommandParser_Init();
   UART_Comm_Init();
-
   HAL_UART_Receive_IT(&huart2, (uint8_t *)&uart_rx_temp, 1);
+  HAL_ADCEx_Calibration_Start(&hadc1);
+  HAL_ADC_Start(&hadc1);
+  //HAL_ADC_PollForConversion(&hadc1, 10);
 
   /* USER CODE END 2 */
 
@@ -208,7 +210,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_0;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_239CYCLES_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
